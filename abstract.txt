@@ -1,0 +1,31 @@
+Name:  Stochastic bandits with feedback graphs
+
+Topic:  Bandit models with a graph structure
+
+Category: implementation, research
+
+Contact: Emilie Kaufmann <emilie.kaufmann@inria.fr>
+
+Assigned to:  Ronan Riochet and Gurvan Lhostis
+
+Description:  The paper [1] considers a bandit problem in which the arms form a directed graph, and when choosing one of the nodes, the rewards of the (out) neighbors of this node are observed. This paper considers an adversarial bandit model, and the regret is proved to be highly dependent of the structure of the graph. In the literature on stochastic bandits (when the each arm produces i.i.d. rewards), a weaker setting, called bandit with side observation, is considered: the graph is directed and when a node is chosen, its own reward is always revealed. The goal of this project is first to implement the algorithm of [1] in a stochastic bandit model for each type of feedback graph mentioned in [2], and then to try to adapt the UCB-type algorithms of [2] to more general feedback graphs, or find other methods.
+
+1: Online Learning with Feedback Graphs: Beyond Bandits
+2: Leveraging Side Observations in Stochastic Bandits
+
+
+### WHAT TO DO
+
+- Design a structure of  graph with side observations from [2]
+- Apply the adversarial bandit algorithm of  [1] to the graphs of [2].
+- Design bandit with general structure graph such as [1]
+- Apply UCB from [2] to the more general directed graph.
+
+Class of general directed graph
+- node data is a bandit
+
+Subclass of graphs with side observations.
+
+UCB and adversarial methods with graph parameter
+
+Plot pipeline
