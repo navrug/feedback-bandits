@@ -31,6 +31,9 @@ class BernoulliArm(Arm):
     def draw(self):
         return self.np_rng.binomial(1,self.mean)
         
+    def get_mean(self):
+        return self.mean
+        
 
 class FiniteArm(Arm):
     """ Finite arm. 
@@ -52,6 +55,9 @@ class FiniteArm(Arm):
             cmf += self.probabilities[i]
             if r < cmf:
                 return self.values[i]
+        
+    def get_mean(self):
+        return np.sum(self.probabilities*self.values)
 
 
 class ExpArm(Arm):
@@ -67,6 +73,9 @@ class ExpArm(Arm):
 
     def draw(self):
         return self.np_rng.exponential(self.theta)
+        
+    def get_mean(self):
+        return 1.0/self.theta
 
 
 class BetaArm(Arm):
@@ -75,8 +84,11 @@ class BetaArm(Arm):
     """
     def __init__(self, a=1, b=1, np_rng=None):
         Arm.__init__(self, np_rng)
-        self.a = a
-        self.b = b
+        self.a = float(a)
+        self.b = float(b)
 
     def draw(self):
         return self.np_rng.beta(self.a,self.b)
+        
+    def get_mean(self):
+        return self.a/(self.a + self.b)
