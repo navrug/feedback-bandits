@@ -13,7 +13,7 @@ from bandit import BernoulliArm
 from feedback_graph import FeedbackGraph
 
 #%%
-
+np.random.seed(seed=0)
 np_rng = np.random.RandomState(0)
 n = 5
 T = 1000
@@ -51,20 +51,44 @@ U = range(n)
 graphs = [full, bandit, loopless, revealing, unobservable]
 names = ["Full", "Bandit", "Loopless", "Revealing", "Unobservable"]
 
-for graph, name in zip(graphs, names):
-    print "Working with", name
-    Exp3G_rew = Exp3G(eta, gamma, U, graph, T, n_runs)
-    UCB_N_rew = UCB_N(graph, T, n_runs)
-    UCB_maxN_rew = UCB_maxN(graph, T, n_runs)
-    generalized_UCB_rew = generalized_UCB(graph, T, n_runs)
-    plt.figure()
-    plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Exp3G_rew))
-    plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(UCB_N_rew))
-    plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(UCB_maxN_rew))
-    plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(generalized_UCB_rew))
-    plt.legend(["Exp3G","UCB-N","UCB-MaxN","Generalized-UCB"], loc="upper left")
-    plt.suptitle(name, fontsize=20)
-    plt.xlabel("Time")
-    plt.ylabel("Regret")
+full = False
+if full:
+    for graph, name in zip(graphs, names):
+        print "Working with", name
+        Exp3G_rew = Exp3G(eta, gamma, U, graph, T, n_runs)
+        UCB_N_rew = UCB_N(graph, T, n_runs)
+        UCB_MaxN_rew = UCB_MaxN(graph, T, n_runs)
+        Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
+        Generalized_UCB_inv__rew = Generalized_UCB(graph, T, n_runs)
+        Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
+        Thompson_N_rew = Thompson_N(graph, T, n_runs)
+        Thompson_MaxN_rew = Thompson_MaxN(graph, T, n_runs)
+        plt.figure()
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Exp3G_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(UCB_N_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(UCB_MaxN_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Thompson_N_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Thompson_MaxN_rew))
+        plt.legend(["Exp3G","UCB-N","UCB-MaxN","Generalized-UCB","Thompson-N","Thompson-MaxN"], loc="upper left")
+        plt.suptitle(name, fontsize=20)
+        plt.xlabel("Time")
+        plt.ylabel("Regret")
         
-            
+else:
+# Comparison of generalized UCBs.
+    for graph, name in zip(graphs, names):
+        print "Working with", name
+        Exp3G_rew = Exp3G(eta, gamma, U, graph, T, n_runs)
+        Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
+        Generalized_UCB_inv_rew = Generalized_UCB_inv(graph, 0.1, T, n_runs)
+        Generalized_UCB_exp_rew = Generalized_UCB_exp(graph, 0.1, T, n_runs)
+        plt.figure()
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Exp3G_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_inv_rew))
+        plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_exp_rew))
+        plt.legend(["Exp3G","Generalized-UCB","Generalized-UCB-inv","Generalized-UCB-exp"], loc="upper left")
+        plt.suptitle(name, fontsize=20)
+        plt.xlabel("Time")
+        plt.ylabel("Regret")
