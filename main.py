@@ -22,10 +22,10 @@ n_runs = 100
 
 A_full = np.ones((n,n), dtype=bool)
 A_bandit = np.eye(n, dtype=bool)
-A_loopless = A_full - A_bandit
+A_loopless = A_full ^ A_bandit
 A_revealing = np.vstack((np.ones((1,n), dtype=bool),np.zeros((n-1, n), dtype=bool)))
 A_unobservable = np.ones((n,n), dtype=bool)
-A_unobservable[0:2,0] = False
+A_weak[0:2,0] = False
 
 arms = []
 for i in range(n):
@@ -35,7 +35,7 @@ full = FeedbackGraph(A_full, arms=arms, np_rng=np_rng)
 bandit = FeedbackGraph(A_bandit, arms=arms, np_rng=np_rng)
 loopless = FeedbackGraph(A_loopless, arms=arms, np_rng=np_rng)
 revealing = FeedbackGraph(A_revealing, arms=arms, np_rng=np_rng)
-unobservable = FeedbackGraph(A_unobservable, arms=arms, np_rng=np_rng)
+weak = FeedbackGraph(A_weak, arms=arms, np_rng=np_rng)
 
 
 
@@ -48,8 +48,8 @@ U = range(n)
 
 
 
-graphs = [full, bandit, loopless, revealing, unobservable]
-names = ["Full", "Bandit", "Loopless", "Revealing", "Unobservable"]
+graphs = [full, bandit, loopless, revealing, weak]
+names = ["Full", "Bandit", "Loopless", "Revealing", "Weak"]
 
 full = False
 if full:
@@ -59,8 +59,8 @@ if full:
         UCB_N_rew = UCB_N(graph, T, n_runs)
         UCB_MaxN_rew = UCB_MaxN(graph, T, n_runs)
         Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
-        Generalized_UCB_inv__rew = Generalized_UCB(graph, T, n_runs)
-        Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
+        Generalized_UCB_inv_rew = Generalized_UCB_inv(graph, T, n_runs)
+        Generalized_UCB_exp_rew = Generalized_UCB_exp(graph, T, n_runs)
         Thompson_N_rew = Thompson_N(graph, T, n_runs)
         Thompson_MaxN_rew = Thompson_MaxN(graph, T, n_runs)
         plt.figure()
@@ -83,7 +83,7 @@ else:
         Generalized_UCB_rew = Generalized_UCB(graph, T, n_runs)
         Generalized_UCB_inv_rew = Generalized_UCB_inv(graph, 0.1, T, n_runs)
         Generalized_UCB_exp_rew = Generalized_UCB_exp(graph, 0.1, T, n_runs)
-        plt.figure()
+        f = plt.figure()
         plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Exp3G_rew))
         plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_rew))
         plt.plot(range(T), graph.best_mean()*np.array(range(T)) - np.cumsum(Generalized_UCB_inv_rew))
@@ -92,3 +92,4 @@ else:
         plt.suptitle(name, fontsize=20)
         plt.xlabel("Time")
         plt.ylabel("Regret")
+        f.savefig("figure/"+name+'.pdf', bbox_inches='tight')
